@@ -12,7 +12,8 @@
 
 from ex0 import (
     Card,
-    Player
+    Player,
+    VictoryError
 )
 
 
@@ -35,6 +36,11 @@ class ArtifactCard(Card):
 
     def activate_ability(self, owner: Player) -> dict:
         self.__durability -= 1
-        owner.set_mana(1)
+        match self.__effect:
+            case "Permanent: +1 mana per turn":
+                owner.set_mana(1)
+            case "Permanent: +1 HP per turn":
+                if (owner.damage(1)):
+                    raise VictoryError(owner.get_name())
         if self.__durability <= 0:
             owner.remove_effects(self.__effect)

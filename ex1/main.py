@@ -38,7 +38,7 @@ def main():
             SpellCard("Lightning Bolt", 3, "common", "spell", "damages"),
             SpellCard("Divine light", 3, "common", "spell", "heal"),
             ArtifactCard("Mana Crystal", 2, "rare", "artifact", 5,
-                         "Permanent: +1 mana per turn'"),
+                         "Permanent: +1 mana per turn"),
             Creature("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
             Creature("Elf Archer", 2, "Common", "creature", 2, 8, 0)
         ]
