@@ -23,7 +23,7 @@ class SpellCard(Card):
         super().__init__(name, cost, rarity, type_card)
         self.__effect_type_card: str = effect_type_card
 
-    def play(self, game_state: dict, owner: Player) -> dict:
+    def play(self, game_state: dict) -> dict:
         """If the player have enough mana points, the card will be added to
         the board, awarded to the owner and the cost will be substract from the
         owner's mana points
@@ -36,7 +36,8 @@ class SpellCard(Card):
         Returns:
             dict: The summary of the invocation
         """
-        super().play(game_state, owner)
+        super().play(game_state)
+        owner: Player = self.get_owner()
         if self.is_playable(owner.get_mana()):
             print("Playable: True")
             owner.set_mana(-self.get_cost())
@@ -52,17 +53,21 @@ class SpellCard(Card):
     def resolve_effect(self, game_state: dict, owner: Player) -> str:
         ennemy: Player = [player for player in game_state["players"]
                           if player.get_name() !=
-                          self.__owner.get_name()][0]
-        match self.__effect_type_card:
-            case "damage":
+                          owner.get_name()][0]
+        effect: str = ""
+        match self.__effect_type_card.lower():
+            case "damages":
                 if ennemy.damage(3):
                     raise VictoryError(owner.get_name())
-                effect: str = f"{self.get_name()} deals 3 damage to"
-                f" {ennemy.get_name()} by-passing the defense"
+                effect: str = f"{self.get_name()} deals 3 damage to"\
+                              f" {ennemy.get_name()} by-passing the defense."\
+                              f" {ennemy.get_name()} has"\
+                              f" {ennemy.get_health()} HP left"
             case "heal":
                 owner.healing(3)
-                effect: str = f"{self.get_name()} gives 3 health points to"
-                f" {owner.get_name()}"
+                effect: str = f"{self.get_name()} gives 3 health points to"\
+                              f" {owner.get_name()} bringing them to"\
+                              f" {owner.get_health()} HP"
             case "buff":
                 owner.set_defense(3)
                 effect: str = f"{self.get_name()} gives 3 defense points"

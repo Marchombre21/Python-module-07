@@ -10,7 +10,7 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex0.Card import Card, Player, GameErrors
+from .Card import Card, Player, GameErrors
 
 
 class VictoryError(GameErrors):
@@ -32,9 +32,8 @@ class Creature(Card):
         self.__attack: int = attack
         self.__health: int = health
         self.__defense: int = defense
-        self.__owner: Player | None = None
 
-    def play(self, game_state: dict, owner: Player) -> dict:
+    def play(self, game_state: dict) -> dict:
         """If the player have enough mana points, the card will be added to
         the board, awarded to the owner and the cost will be substract from the
         owner's mana points
@@ -47,12 +46,12 @@ class Creature(Card):
         Returns:
             dict: The summary of the invocation
         """
-        super().play(game_state, owner)
+        super().play(game_state)
+        owner: Player = self.get_owner()
         if self.is_playable(owner.get_mana()):
             print("Playable: True")
             game_state["on_board"].append(self)
             owner.set_mana(-self.get_cost())
-            self.set_owner(owner)
             return {'card_played': self.get_name(), 'mana_used':
                     self.get_cost(), 'remaining mana': owner.get_mana(),
                     'effect': 'Creature summoned to battlefield'}
@@ -78,29 +77,33 @@ class Creature(Card):
                                 card.get_owner() != self.get_owner()]
         if len(on_board) > 0:
             for card in on_board:
+                owner: Player = card.get_owner()
                 if isinstance(card, Creature):
                     if self.duel(card):
                         game_state["on_board"].remove(card)
                         card.discard_pile()
                         damages: int = self.__attack - card.get_defense()\
                             - card.get_health()
-                        if card.get_owner().damage(damages):
-                            raise VictoryError(self.__owner.get_name())
+                        if owner.damage(damages):
+                            raise VictoryError(self.get_owner().get_name())
                         return {'attacker': self.get_name(), 'target':
                                 card.get_name(), 'damage_dealt': damages,
-                                'combat_resolved': True}
+                                'combat_resolved': True, "Ennemy's HP remain":
+                                owner.get_health()}
                     else:
                         return {'attacker': self.get_name(), 'target':
                                 card.get_name(), 'damage_dealt': 0,
-                                'combat_resolved': False}
+                                'combat_resolved': False, "Ennemy's HP remain":
+                                owner.get_health()}
         else:
             ennemy: Player = [player for player in game_state["players"]
                               if player.get_name() !=
-                              self.__owner.get_name()][0]
+                              self.get_owner().get_name()][0]
             if ennemy.damage(self.__attack):
-                raise VictoryError(self.__owner.get_name())
+                raise VictoryError(self.get_owner().get_name())
             return {'attacker': self.get_name(), 'target':
-                    ennemy.get_name(), 'damage_dealt': self.__attack}
+                    ennemy.get_name(), 'damage_dealt': self.__attack,
+                    "Ennemy's HP remain": ennemy.get_health()}
 
     def get_defense(self) -> int:
         return self.__defense
@@ -115,7 +118,7 @@ class Creature(Card):
             ennemy (Creature): The instance of the opposing creature
 
         Returns:
-            bool: True if this creature kill the opposing
+            bool: True if this creature kill his opponent
         """
         return self.__attack - ennemy.get_defense() >= ennemy.get_health()
 
@@ -124,13 +127,3 @@ class Creature(Card):
         result["attack"] = self.__attack
         result["defense"] = self.__defense
         return result
-
-    def get_owner(self) -> Player:
-        """Return the owner of this card
-        """
-        return self.__owner
-
-    def set_owner(self, player: Player) -> None:
-        """Assign this card to a player
-        """
-        self.__owner = player

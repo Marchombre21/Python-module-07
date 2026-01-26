@@ -1,6 +1,7 @@
-from ex0.Card import Player, GameErrors
-from ex0.CreatureCard import Creature, VictoryError
+from .Card import Player, GameErrors, Card, NegativeValue, EmptyValue
+from .CreatureCard import Creature, VictoryError
 
-__all__ = [Player, Creature, GameErrors, VictoryError]
+__all__ = [Player, Creature, GameErrors, VictoryError, NegativeValue,
+           EmptyValue, Card]
 __author__ = "Bruno"
 __version__ = "1.0.0"

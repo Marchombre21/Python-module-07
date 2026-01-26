@@ -41,9 +41,11 @@ class Player:
             raise EmptyValue("name")
         self.__name: str = name.capitalize()
         self.__PV: int = PV
-        self.__cards: list["Card"] = []
+        self.__deck: list = []
+        self.__graveyard: list["Card"] = []
         self.__mana: int = 6
         self.__defense: int = 0
+        self.__effects: list[str] = []
 
     def add_card(self, card: "Card") -> None:
         """Add played card in player's hand
@@ -51,7 +53,7 @@ class Player:
         Args:
             card (Card): An instance of the played card
         """
-        self.__cards.append(card)
+        self.__deck.append(card)
 
     def get_mana(self) -> int:
         return self.__mana
@@ -62,8 +64,23 @@ class Player:
     def get_name(self) -> str:
         return self.__name
 
+    def add_deck(self, deck: list) -> None:
+        self.__deck = deck
+
+    def to_the_grave(self, card: "Card") -> None:
+        self.__graveyard.append(card)
+
     def get_defense(self) -> int:
         return self.__defense
+
+    def add_effects(self, effect: str):
+        self.__effects.append(effect)
+
+    def remove_effects(self, effect: str):
+        try:
+            self.__effects.remove(effect)
+        except ValueError as e:
+            raise ValueError(e)
 
     def set_defense(self, modification: int) -> None:
         """Modify player's defense points. When he gets some damages we
@@ -74,7 +91,7 @@ class Player:
         """
         if not isinstance(modification, int):
             raise ValueError("If you want to modify defense points, you have"
-                             "to do that with an int value")
+                             " to do that with an int value")
         self.__defense += modification
 
     def set_mana(self, quantity: int) -> None:
@@ -89,6 +106,12 @@ class Player:
             self.__mana = 0
         else:
             self.__mana += quantity
+            if quantity >= 0:
+                print(f"\nMana added succesfully! New {self.__name}'s mana"
+                      f" points: {self.__mana}\n")
+            else:
+                print(f"\nMana removed succesfully! New {self.__name}'s mana"
+                      f" points: {self.__mana}\n")
 
     def healing(self, health_points: int) -> None:
         """Heal your player adding some health points to his HP
@@ -99,9 +122,9 @@ class Player:
         Raises:
             ValueError: Positive int value mandatory
         """
-        if isinstance(health_points, int) or health_points < 0:
+        if not isinstance(health_points, int) or health_points < 0:
             raise ValueError("If you want to healing your player, you have"
-                             "to do that with a positive int value")
+                             " to do that with a positive int value")
         self.__PV += health_points
 
     def damage(self, damages: int) -> bool:
@@ -124,15 +147,14 @@ class Card(ABC):
         self.__name = name
         self.__cost = cost
         self.__rarity = rarity
-        self.__type_card = type_card
+        self.__type_card = type_card.capitalize()
         self.__graveyard: bool = False
+        self.__owner: Player | None = None
 
     @abstractmethod
-    def play(self, game_state: dict, owner: Player) -> dict:
+    def play(self, game_state: dict) -> dict:
         if not isinstance(game_state, dict):
             raise ValueError("game_state must be a dictionnnary")
-        if not isinstance(owner, Player):
-            raise ValueError("Who is playing?")
         return {}
 
     def get_card_info(self) -> dict:
@@ -153,12 +175,12 @@ class Card(ABC):
         """
         return available_mana >= self.__cost
 
-    def get_cost(self):
+    def get_cost(self) -> int:
         """Return the cost in mana points to play this card
         """
         return self.__cost
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self.__name
 
     def discard_pile(self) -> None:
@@ -166,3 +188,16 @@ class Card(ABC):
         that checks if a creature is alive before she does anything
         """
         self.__graveyard = True
+
+    def get_type(self) -> str:
+        return self.__type_card
+
+    def get_owner(self) -> Player:
+        """Return the owner of this card
+        """
+        return self.__owner
+
+    def set_owner(self, player: Player) -> None:
+        """Assign this card to a player
+        """
+        self.__owner = player
