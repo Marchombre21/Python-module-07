@@ -13,15 +13,18 @@
 from ex0 import (
     Card,
     Player,
-    VictoryError
+    VictoryError,
+    Rarity,
+    TypeCard,
+    SpellsEffects
 )
 
 
 class SpellCard(Card):
-    def __init__(self, name: str, cost: int, rarity: str, type_card: str,
-                 effect_type_card: str):
+    def __init__(self, name: str, cost: int, rarity: Rarity,
+                 type_card: TypeCard, effect_type_card: SpellsEffects):
         super().__init__(name, cost, rarity, type_card)
-        self.__effect_type_card: str = effect_type_card
+        self.__effect_type_card: SpellsEffects = effect_type_card
 
     def play(self, game_state: dict) -> dict:
         """If the player have enough mana points, the card will be added to

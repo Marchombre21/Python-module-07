@@ -13,16 +13,20 @@
 from ex0 import (
     Card,
     Player,
-    VictoryError
+    VictoryError,
+    Rarity,
+    TypeCard,
+    ArtifactsEffects
 )
 
 
 class ArtifactCard(Card):
-    def __init__(self, name: str, cost: int, rarity: str, type_card: str,
-                 durability: int, effect: str):
+    def __init__(self, name: str, cost: int, rarity: Rarity,
+                 type_card: TypeCard, durability: int,
+                 effect: ArtifactsEffects):
         super().__init__(name, cost, rarity, type_card)
         self.__durability: int = durability
-        self.__effect: str = effect
+        self.__effect: ArtifactsEffects = effect
 
     def play(self, game_state: dict) -> dict:
         super().play(game_state)

@@ -15,7 +15,9 @@ import random
 from ex0 import (
     Card,
     NegativeValue,
-    EmptyValue
+    EmptyValue,
+    ArtifactsEffects,
+    TypeCard
 )
 
 
@@ -31,7 +33,7 @@ class Player:
         self.__graveyard: list["Card"] = []
         self.__mana: int = 6
         self.__defense: int = 0
-        self.__effects: list[str] = []
+        self.__effects: list[ArtifactsEffects] = []
 
     def add_card(self, card: "Card") -> None:
         """Add played card in player's hand
@@ -59,7 +61,7 @@ class Player:
     def get_defense(self) -> int:
         return self.__defense
 
-    def add_effects(self, effect: str):
+    def add_effects(self, effect: ArtifactsEffects):
         self.__effects.append(effect)
 
     def set_defense(self, modification: int) -> None:
@@ -126,8 +128,9 @@ class Deck:
     def __init__(self, owner: Player):
         self.__owner: Player = owner
         self.__content: list = []
+        owner.add_deck(self)
 
-    def get_owner(self):
+    def get_owner(self) -> Player:
         return self.__owner
 
     def get_content(self) -> list:
@@ -156,7 +159,7 @@ class Deck:
         except IndexError:
             return Card("ErrorCard", 0, "unfortunately common", "error")
 
-    def get_deck_stats(self):
+    def get_deck_stats(self) -> dict:
         nb_creatures: int = 0
         nb_spells: int = 0
         nb_artifacts: int = 0
@@ -164,11 +167,11 @@ class Deck:
         for card in self.__content:
             avg += card.get_cost()
             match card.get_type():
-                case "Creature":
+                case TypeCard.CREATURE:
                     nb_creatures += 1
-                case "Artifact":
+                case TypeCard.ARTIFACT:
                     nb_artifacts += 1
-                case "Spell":
+                case TypeCard.SPELL:
                     nb_spells += 1
         avg /= len(self.__content)
         return {'total_cards': len(self.__content), 'creatures': nb_creatures,

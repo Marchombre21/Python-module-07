@@ -10,10 +10,12 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex0.Card import (
+from ex0 import (
     Card,
     NegativeValue,
-    EmptyValue
+    EmptyValue,
+    Rarity,
+    TypeCard
 )
 from ex2 import (
     Combatable,
@@ -25,8 +27,9 @@ class EliteCard(Card, Combatable, Magical):
     """An elite class that combine an abstract class (Card) and two interfaces
     (Combatable and Magical)
     """
-    def __init__(self, name: str, cost: int, rarity: str, type_card: str,
-                 attack: int, defense: int, mana: int, health: int):
+    def __init__(self, name: str, cost: int, rarity: Rarity,
+                 type_card: TypeCard, attack: int, defense: int, mana: int,
+                 health: int):
         super().__init__(name, cost, rarity, type_card)
         if not isinstance(name, str) or\
            not isinstance(rarity, str) or\

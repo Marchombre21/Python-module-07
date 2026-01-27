@@ -10,7 +10,7 @@
 #                                                                             #
 # ****************************************************************************#
 
-from .Card import Card, Player, GameErrors
+from .Card import Card, Player, GameErrors, Rarity, TypeCard
 
 
 class VictoryError(GameErrors):
@@ -20,8 +20,8 @@ class VictoryError(GameErrors):
 
 
 class Creature(Card):
-    def __init__(self, name: str, cost: int, rarity: str, type_card: str,
-                 attack: int, health: int, defense: int):
+    def __init__(self, name: str, cost: int, rarity: Rarity,
+                 type_card: TypeCard, attack: int, health: int, defense: int):
         super().__init__(name, cost, rarity, type_card)
         if not isinstance(attack, int) or attack < 0:
             raise ValueError("Attack must be a positive integer")

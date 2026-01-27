@@ -50,9 +50,7 @@ def main():
         game_state["players"] = [bruno, cannelle]
         game_state["on_board"] = []
         deck_cannelle = Deck(cannelle)
-        cannelle.add_deck(deck_cannelle)
         deck_bruno = Deck(bruno)
-        bruno.add_deck(deck_bruno)
         for card_bruno, card_cannelle in zip(cards_bruno, cards_cannelle):
             deck_bruno.add_card(card_bruno)
             deck_cannelle.add_card(card_cannelle)

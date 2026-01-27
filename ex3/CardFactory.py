@@ -12,31 +12,6 @@
 
 from abc import ABC, abstractmethod
 from ex0 import Card
-from enum import Enum
-
-
-class Rarity(Enum):
-    COMMON = "common"
-    RARE = "rare"
-    LEGENDARY = "legendary"
-
-
-class SpellsEffects(Enum):
-    DAMAGES = "damages"
-    HEAL = "heal"
-    BUFF = "buff"
-    DEBUFF = "debuff"
-
-
-class ArtifactsEffects(Enum):
-    MANA = "Permanent: +1 mana per turn"
-    HEALTH = "Permanent: +1 HP per turn"
-
-
-class TypeCard(Enum):
-    ARTIFACT = "artifact"
-    CREATURE = "creature"
-    SPELL = "spell"
 
 
 class CardFactory(ABC):

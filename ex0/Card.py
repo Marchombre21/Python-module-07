@@ -11,6 +11,34 @@
 # ****************************************************************************#
 
 from abc import ABC, abstractmethod
+from enum import Enum
+
+
+class Rarity(Enum):
+    COMMON = "Common"
+    RARE = "Rare"
+    LEGENDARY = "Legendary"
+    UNCOMMON = "Uncommon"
+
+
+class SpellsEffects(Enum):
+    DAMAGES = "damage"
+    HEAL = "heal"
+    BUFF = "buff"
+
+
+class ArtifactsEffects(Enum):
+    MANA = "Permanent: +1 mana per turn"
+    HEALTH = "Permanent: +1 HP per turn"
+    ATTACK = "Permanent: +2 attack to equipped creature"
+    DRAW = "Permanent: Draw an extra card each turn"
+    COST = "Permanent: +1 cost reduction to all cards"
+
+
+class TypeCard(Enum):
+    ARTIFACT = "Artifact"
+    CREATURE = "Creature"
+    SPELL = "Spell"
 
 
 class GameErrors(Exception):
@@ -73,10 +101,10 @@ class Player:
     def get_defense(self) -> int:
         return self.__defense
 
-    def add_effects(self, effect: str):
+    def add_effects(self, effect: ArtifactsEffects):
         self.__effects.append(effect)
 
-    def remove_effects(self, effect: str):
+    def remove_effects(self, effect: ArtifactsEffects):
         try:
             self.__effects.remove(effect)
         except ValueError as e:
@@ -143,11 +171,12 @@ class Player:
 
 
 class Card(ABC):
-    def __init__(self, name: str, cost: int, rarity: str, type_card: str):
-        self.__name = name
-        self.__cost = cost
-        self.__rarity = rarity
-        self.__type_card = type_card.capitalize()
+    def __init__(self, name: str, cost: int, rarity: Rarity,
+                 type_card: TypeCard):
+        self.__name: str = name.capitalize()
+        self.__cost: int = cost
+        self.__rarity: Rarity = rarity
+        self.__type_card: TypeCard = type_card
         self.__graveyard: bool = False
         self.__owner: Player | None = None
 
@@ -189,7 +218,7 @@ class Card(ABC):
         """
         self.__graveyard = True
 
-    def get_type(self) -> str:
+    def get_type(self) -> TypeCard:
         return self.__type_card
 
     def get_owner(self) -> Player:
