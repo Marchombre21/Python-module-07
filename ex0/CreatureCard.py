@@ -19,7 +19,7 @@ class VictoryError(GameErrors):
         super().__init__(details)
 
 
-class Creature(Card):
+class CreatureCard(Card):
     def __init__(self, name: str, cost: int, rarity: Rarity,
                  type_card: TypeCard, attack: int, health: int, defense: int):
         super().__init__(name, cost, rarity, type_card)
@@ -49,7 +49,9 @@ class Creature(Card):
         super().play(game_state)
         owner: Player = self.get_owner()
         if self.is_playable(owner.get_mana()):
-            print("Playable: True")
+            print(f"Playable: True, Name: {self.get_name()}, Cost:"
+                  f" {self.get_cost()}, New {owner.get_name()}'s mana points:"
+                  f" {owner.get_mana()}")
             game_state["on_board"].append(self)
             owner.set_mana(-self.get_cost())
             return {'card_played': self.get_name(), 'mana_used':
@@ -78,10 +80,11 @@ class Creature(Card):
         if len(on_board) > 0:
             for card in on_board:
                 owner: Player = card.get_owner()
-                if isinstance(card, Creature):
+                if isinstance(card, CreatureCard):
                     if self.duel(card):
                         game_state["on_board"].remove(card)
                         card.discard_pile()
+                        card.get_owner().to_the_grave(self)
                         damages: int = self.__attack - card.get_defense()\
                             - card.get_health()
                         if owner.damage(damages):
@@ -91,8 +94,10 @@ class Creature(Card):
                                 'combat_resolved': True, "Ennemy's HP remain":
                                 owner.get_health()}
                     else:
+                        card.set_health(-(self.__attack - card.get_defense()))
                         return {'attacker': self.get_name(), 'target':
-                                card.get_name(), 'damage_dealt': 0,
+                                card.get_name(), 'damage_dealt':
+                                self.__attack - card.get_defense(),
                                 'combat_resolved': False, "Ennemy's HP remain":
                                 owner.get_health()}
         else:
@@ -111,11 +116,16 @@ class Creature(Card):
     def get_health(self) -> int:
         return self.__health
 
-    def duel(self, ennemy: "Creature") -> bool:
+    def set_health(self, quantity: int) -> None:
+        if not isinstance(quantity, int):
+            raise ValueError("You must use an int to modify health")
+        self.__health += quantity
+
+    def duel(self, ennemy: "CreatureCard") -> bool:
         """Compare attack minus ennemy's defense with ennemy's health.
 
         Args:
-            ennemy (Creature): The instance of the opposing creature
+            ennemy (CreatureCard): The instance of the opposing creature
 
         Returns:
             bool: True if this creature kill his opponent

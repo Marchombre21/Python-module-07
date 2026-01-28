@@ -42,7 +42,9 @@ class SpellCard(Card):
         super().play(game_state)
         owner: Player = self.get_owner()
         if self.is_playable(owner.get_mana()):
-            print("Playable: True")
+            print(f"Playable: True, Name: {self.get_name()}, Cost:"
+                  f" {self.get_cost()}, New {owner.get_name()}'s mana points:"
+                  f" {owner.get_mana()}")
             owner.set_mana(-self.get_cost())
             effect = self.resolve_effect(game_state, owner)
             return {'card_played': self.get_name(), 'mana_used':
@@ -58,25 +60,28 @@ class SpellCard(Card):
                           if player.get_name() !=
                           owner.get_name()][0]
         effect: str = ""
-        match self.__effect_type_card.lower():
-            case "damages":
+        match self.__effect_type_card:
+            case SpellsEffects.DAMAGES:
                 if ennemy.damage(3):
                     raise VictoryError(owner.get_name())
                 effect: str = f"{self.get_name()} deals 3 damage to"\
                               f" {ennemy.get_name()} by-passing the defense."\
                               f" {ennemy.get_name()} has"\
                               f" {ennemy.get_health()} HP left"
-            case "heal":
+            case SpellsEffects.HEAL:
                 owner.healing(3)
                 effect: str = f"{self.get_name()} gives 3 health points to"\
                               f" {owner.get_name()} bringing them to"\
                               f" {owner.get_health()} HP"
-            case "buff":
-                owner.set_defense(3)
-                effect: str = f"{self.get_name()} gives 3 defense points"
+            case SpellsEffects.BUFF:
+                owner.set_defense(1)
+                effect: str = f"{self.get_name()} gives 1 defense points"
                 f" to {owner.get_name()}"
-            case "debuff":
-                ennemy.set_defense(-3)
-                effect: str = f"{self.get_name()} gives -3 defense points"
+            case SpellsEffects.DEBUFF:
+                ennemy.set_defense(-1)
+                effect: str = f"{self.get_name()} gives -1 defense points"
                 f" to {ennemy.get_name()}"
         return effect
+
+    def get_effect(self) -> SpellsEffects:
+        return self.__effect_type_card

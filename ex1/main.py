@@ -12,7 +12,7 @@
 
 from ex0 import (
     Card,
-    Creature,
+    CreatureCard,
     GameErrors
 )
 
@@ -31,16 +31,16 @@ def main():
             SpellCard("Divine light", 3, "common", "spell", "heal"),
             ArtifactCard("Mana Crystal", 2, "rare", "artifact", 5,
                          "Permanent: +1 mana per turn'"),
-            Creature("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
-            Creature("Elf Archer", 2, "Common", "creature", 2, 8, 0)
+            CreatureCard("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
+            CreatureCard("Elf Archer", 2, "Common", "creature", 2, 8, 0)
         ]
         cards_cannelle: list[Card] = [
             SpellCard("Lightning Bolt", 3, "common", "spell", "damages"),
             SpellCard("Divine light", 3, "common", "spell", "heal"),
             ArtifactCard("Mana Crystal", 2, "rare", "artifact", 5,
                          "Permanent: +1 mana per turn"),
-            Creature("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
-            Creature("Elf Archer", 2, "Common", "creature", 2, 8, 0)
+            CreatureCard("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
+            CreatureCard("Elf Archer", 2, "Common", "creature", 2, 8, 0)
         ]
         print("\n=== DataDeck Deck Builder ===\n")
         print("Building deck with different card types...\n")

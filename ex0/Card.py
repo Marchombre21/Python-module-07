@@ -5,10 +5,11 @@
 #                                                     +:+ +:+         +:+     #
 #    By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        #
 #                                                 +#+#+#+#+#+   +#+           #
-#    Created: 2026/01/24 07:35:41 by bfitte            #+#    #+#             #
-#    Updated: 2026/01/24 07:35:42 by bfitte           ###   ########lyon.fr   #
+#    Created: 2026/01/28 17:37:53 by bfitte            #+#    #+#             #
+#    Updated: 2026/01/28 17:37:54 by bfitte           ###   ########lyon.fr   #
 #                                                                             #
 # ****************************************************************************#
+
 
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -25,6 +26,7 @@ class SpellsEffects(Enum):
     DAMAGES = "damage"
     HEAL = "heal"
     BUFF = "buff"
+    DEBUFF = "debuff"
 
 
 class ArtifactsEffects(Enum):

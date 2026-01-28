@@ -13,7 +13,7 @@
 import random
 from ex3.CardFactory import CardFactory
 from ex0 import (
-    Creature,
+    CreatureCard,
     Card,
     Rarity,
     TypeCard,
@@ -123,7 +123,7 @@ class FantasyCardFactory(CardFactory):
                 "effect_type": SpellsEffects.DAMAGES,
             },
             {
-                "name": "Shield Spell,",
+                "name": "Shield Spell",
                 "cost": 1,
                 "type_card": TypeCard.SPELL,
                 "rarity": Rarity.COMMON,
@@ -142,6 +142,13 @@ class FantasyCardFactory(CardFactory):
                 "type_card": TypeCard.SPELL,
                 "rarity": Rarity.COMMON,
                 "effect_type": SpellsEffects.DAMAGES,
+            },
+            {
+                "name": "Some debuff",
+                "cost": 2,
+                "type_card": TypeCard.SPELL,
+                "rarity": Rarity.COMMON,
+                "effect_type": SpellsEffects.DEBUFF,
             },
             {
                 "name": "Divine Light",
@@ -257,7 +264,7 @@ class FantasyCardFactory(CardFactory):
                         if creature["rarity"] == Rarity.LEGENDARY
                     ]
                 )
-        return Creature(
+        return CreatureCard(
             creature["name"],
             creature["cost"],
             creature["rarity"],
@@ -290,6 +297,14 @@ class FantasyCardFactory(CardFactory):
                         spell
                         for spell in self._spells
                         if spell["effect_type"] == SpellsEffects.DAMAGES
+                    ]
+                )
+            elif effect == SpellsEffects.DEBUFF:
+                spell = random.choice(
+                    [
+                        spell
+                        for spell in self._spells
+                        if spell["effect_type"] == SpellsEffects.DEBUFF
                     ]
                 )
             elif effect == SpellsEffects.HEAL:
@@ -386,11 +401,14 @@ class FantasyCardFactory(CardFactory):
 
     def get_supported_types(self) -> dict:
         result: dict = {}
-        all_cards: list = [self._artifacts + self._creatures + self._spells]
+        all_cards: list = self._artifacts + self._creatures + self._spells
         for i, card in enumerate(all_cards):
-            result[i] = {
+            result[i + 1] = {
                 "name": card["name"],
-                "type": card["type_card"],
-                "rarity": card["rarity"],
+                "type": card["type_card"].value,
+                "rarity": card["rarity"].value,
             }
         return result
+
+    def get_name(self) -> str:
+        return self.__class__.__name__

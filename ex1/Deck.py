@@ -17,8 +17,13 @@ from ex0 import (
     NegativeValue,
     EmptyValue,
     ArtifactsEffects,
-    TypeCard
+    TypeCard,
+    GameErrors
 )
+
+
+class EmptyDeck(GameErrors):
+    pass
 
 
 class Player:
@@ -31,6 +36,7 @@ class Player:
         self.__PV: int = PV
         self.__deck: "Deck" | None = None
         self.__graveyard: list["Card"] = []
+        self.__hand: list[Card] = []
         self.__mana: int = 6
         self.__defense: int = 0
         self.__effects: list[ArtifactsEffects] = []
@@ -41,7 +47,10 @@ class Player:
         Args:
             card (Card): An instance of the played card
         """
-        self.__deck.append(card)
+        self.__hand.append(card)
+
+    def get_hand(self) -> list[Card]:
+        return self.__hand
 
     def get_mana(self) -> int:
         return self.__mana
@@ -54,6 +63,9 @@ class Player:
 
     def add_deck(self, deck: "Deck") -> None:
         self.__deck = deck
+
+    def get_deck(self) -> "Deck":
+        return self.__deck
 
     def to_the_grave(self, card: "Card") -> None:
         self.__graveyard.append(card)
@@ -90,9 +102,6 @@ class Player:
             self.__mana += quantity
             if quantity >= 0:
                 print(f"\nMana added succesfully! New {self.__name}'s mana"
-                      f" points: {self.__mana}\n")
-            else:
-                print(f"\nMana removed succesfully! New {self.__name}'s mana"
                       f" points: {self.__mana}\n")
 
     def healing(self, health_points: int) -> None:
@@ -155,9 +164,12 @@ class Deck:
 
     def draw_card(self) -> Card:
         try:
-            return self.__content.pop(0)
+            card = self.__content.pop(0)
+            self.__owner.add_card(card)
+            return card
         except IndexError:
-            return Card("ErrorCard", 0, "unfortunately common", "error")
+            raise EmptyDeck("Your deck is empty, you"
+                            f" ({self.__owner.get_name()}) lose.")
 
     def get_deck_stats(self) -> dict:
         nb_creatures: int = 0
