@@ -15,11 +15,9 @@ from ex0 import (
     Rarity,
     GameErrors
 )
-from ex4 import (
-    TournamentCard,
-    DoubleError
-)
+from ex4 import DoubleError
 from ex4.TournamentPlatform import TournamentPlatform
+from ex4.TournamentCard import TournamentCard
 
 
 class BoycottedTournamentError(GameErrors):

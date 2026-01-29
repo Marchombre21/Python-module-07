@@ -65,7 +65,7 @@ class Player:
     def add_deck(self, deck: "Deck") -> None:
         self.__deck = deck
 
-    def get_deck(self) -> "Deck" | None:
+    def get_deck(self) -> "Deck":
         return self.__deck
 
     def get_defense(self) -> int:

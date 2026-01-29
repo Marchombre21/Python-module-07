@@ -64,9 +64,9 @@ class TournamentCard(Card, Combatable, Rankable):
     def get_type(self) -> str:
         return self.__type
 
-    def attack(self, target: "TournamentCard") -> dict:
-        if not isinstance(target, type(self)):
-            raise ValueError("The target must be a TournamentCard")
+    def attack(self, target: Card) -> dict:
+        if not isinstance(target, Card):
+            raise ValueError("The target must be a Card")
         print(
             f"\nAttack result: 'attacker': {self.get_name()}, 'target':"
             f" {target.get_name()}, 'damage': {self.get_attack()},"
