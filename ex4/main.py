@@ -107,11 +107,15 @@ def main():
             },
         ]
     try:
+        print("\n=== DataDeck Tournament Platform ===")
         platform: TournamentPlatform = TournamentPlatform()
-        for i in range(5):
+        print("\nRegistering Tournament Cards...")
+        count = 0
+        while count < 5 and len(platform.get_ids()) < len(creatures):
             creature = random.choice(creatures)
+            count += 1
             try:
-                platform.register_card(TournamentCard(
+                result = platform.register_card(TournamentCard(
                     creature["name"],
                     creature["cost"],
                     creature["rarity"],
@@ -121,15 +125,25 @@ def main():
                     creature["defense"],
                     creature["health"]
                     ))
+                print(result)
             except DoubleError as e:
                 print(e)
-                i -= 1
-        for _ in range(5):
+                count -= 1
+        print("\nCreating tournament match...")
+        for i in range(5):
+            print("\nFight", i + 1)
             ids_creatures = platform.get_ids()
             first: str = random.choice(ids_creatures)
             ids_creatures.remove(first)
             second: str = random.choice(ids_creatures)
             print(platform.create_match(first, second))
+        print("\nTournament Leaderboard")
+        for i, card in enumerate(platform.get_leaderboard()):
+            print(f"{i + 1}. {card}")
+        print("\nPlatform Report")
+        print(platform.generate_tournament_report())
+        print("\n=== Tournament Platform Successfully Deployed! ===")
+        print("All abstract patterns working together harmoniously!")
     except GameErrors as e:
         print(e)
 

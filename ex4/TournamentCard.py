@@ -10,19 +10,23 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex0 import (
-    Card,
-    TypeCard,
-    Rarity,
-    NegativeValue
-    )
+from ex0 import Card, TypeCard, Rarity, NegativeValue
 from ex2 import Combatable
 from ex4 import Rankable
 
 
 class TournamentCard(Card, Combatable, Rankable):
-    def __init__(self, name: str, cost: int, rarity: Rarity, id: str,
-                 type_card: TypeCard, attack: int, defense: int, health: int):
+    def __init__(
+        self,
+        name: str,
+        cost: int,
+        rarity: Rarity,
+        id: str,
+        type_card: TypeCard,
+        attack: int,
+        defense: int,
+        health: int,
+    ):
         super().__init__(name, cost, rarity, type_card)
         if not isinstance(attack, int) or attack < 0:
             raise ValueError("Attack must be a positive integer")
@@ -34,7 +38,6 @@ class TournamentCard(Card, Combatable, Rankable):
             raise ValueError("Id must be a non-empty string")
         self.__wins: int = 0
         self.__losses: int = 0
-        self.__rating: int = 1200
         self.__id: str = id
         self.__attack: int = attack
         self.__defense: int = defense
@@ -46,20 +49,26 @@ class TournamentCard(Card, Combatable, Rankable):
             print("Playable: True")
             game_state["on_board"].append(self)
             game_state["mana"] -= self.get_cost()
-            return {'card_played': self.get_name(), 'mana_used':
-                    self.get_cost(),
-                    'effect': 'Creature summoned to battlefield'}
+            return {
+                "card_played": self.get_name(),
+                "mana_used": self.get_cost(),
+                "effect": "Creature summoned to battlefield",
+            }
         else:
             print("Playable: False")
-            return {'card_almost_played': self.get_name(), 'mana_almost_used':
-                    self.get_cost()}
+            return {
+                "card_almost_played": self.get_name(),
+                "mana_almost_used": self.get_cost(),
+            }
 
     def attack(self, target: "TournamentCard") -> dict:
         if not isinstance(target, type(self)):
             raise ValueError("The target must be a TournamentCard")
-        print(f"\nAttack result: 'attacker': {self.get_name()}, 'target':"
-              f" {target.get_name()}, 'damage': {self.get_attack()},"
-              f"'combat_type': 'melee'")
+        print(
+            f"\nAttack result: 'attacker': {self.get_name()}, 'target':"
+            f" {target.get_name()}, 'damage': {self.get_attack()},"
+            f"'combat_type': 'melee'"
+        )
         return target.defend(self.get_attack())
 
     def defend(self, incoming_damage: int) -> dict:
@@ -67,20 +76,24 @@ class TournamentCard(Card, Combatable, Rankable):
             raise ValueError("Damages must be integers")
         if incoming_damage < 0:
             raise NegativeValue("damages")
-        damages = incoming_damage - self.get_defense()
-        defense = max(incoming_damage - damages, 0)
+        damages = max(incoming_damage - self.get_defense(), 0)
         alive = damages < self.get_health()
-        return {'defender': self.get_name(), 'damage_taken': damages,
-                'damage_blocked': defense, 'still_alive': alive}
+        return {
+            "defender": self.get_name(),
+            "damage_taken": damages,
+            "damage_blocked": self.get_defense(),
+            "still_alive": alive,
+        }
 
     def get_combat_stats(self) -> dict:
-        return {"summary": "It's a dict that summarize combat stats", "reason":
-                "Rules are a little (very) unclear"}
+        return {
+            "summary": "It's a dict that summarize combat stats",
+            "reason": "Rules are a little (very) unclear",
+        }
 
     def calculate_rating(self) -> int:
-        self.__rating += 16 * self.__wins
-        self.__rating = max((self.__rating - (self.__losses * 16)), 0)
-        return self.__rating
+        rating = max(1200 + 16 * self.__wins - self.__losses * 7, 0)
+        return rating
 
     def update_wins(self, wins: int) -> None:
         if not isinstance(wins, int):
@@ -93,15 +106,20 @@ class TournamentCard(Card, Combatable, Rankable):
         self.__losses += losses
 
     def get_rank_info(self) -> dict:
-        return {"name": self.get_name(), "id": self.get_id(), "interfaces":
-                self.get_inheritance(), "rating": self.calculate_rating(),
-                "wins": self.__wins, "losses": self.__losses}
+        return {
+            "name": self.get_name(),
+            "id": self.get_id(),
+            "interfaces": self.get_inheritance(),
+            "rating": self.calculate_rating(),
+            "wins": self.__wins,
+            "losses": self.__losses,
+        }
 
     def get_id(self) -> str:
         return self.__id
 
-    def get_inheritance(self):
-        return self.__class__.__bases__
+    def get_inheritance(self) -> list:
+        return [cls.__name__ for cls in self.__class__.__bases__]
 
     def get_defense(self) -> int:
         return self.__defense
