@@ -23,6 +23,10 @@ from ex4 import (
 )
 
 
+class BoycottedTournamentError(GameErrors):
+    pass
+
+
 def main():
     creatures = [
             {
@@ -130,13 +134,20 @@ def main():
                 print(e)
                 count -= 1
         print("\nCreating tournament match...")
-        for i in range(5):
-            print("\nFight", i + 1)
-            ids_creatures = platform.get_ids()
-            first: str = random.choice(ids_creatures)
-            ids_creatures.remove(first)
-            second: str = random.choice(ids_creatures)
-            print(platform.create_match(first, second))
+        try:
+            for i in range(5):
+                ids_creatures = platform.get_ids()
+                if len(ids_creatures) > 2:
+                    first: str = random.choice(ids_creatures)
+                    ids_creatures.remove(first)
+                    second: str = random.choice(ids_creatures)
+                    print("\nFight", i + 1)
+                    print(platform.create_match(first, second))
+                else:
+                    raise BoycottedTournamentError("Not enough participants to"
+                                                   " fighting")
+        except GameErrors as e:
+            print(e)
         print("\nTournament Leaderboard")
         for i, card in enumerate(platform.get_leaderboard()):
             print(f"{i + 1}. {card}")

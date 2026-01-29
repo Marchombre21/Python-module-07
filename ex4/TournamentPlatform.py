@@ -43,11 +43,11 @@ class TournamentPlatform:
         return result
 
     def create_match(self, card1_id: str, card2_id: str) -> dict:
-        self.__total_matches += 1
         if not isinstance(card1_id, str) or card1_id == "":
             raise ValueError("All id must be non-empty strings")
         if not isinstance(card2_id, str) or card2_id == "":
             raise ValueError("All id must be non-empty strings")
+        self.__total_matches += 1
         first: TournamentCard = [
             card for card in self.__registered_cards if card.get_id() ==
             card1_id
@@ -66,7 +66,7 @@ class TournamentPlatform:
                 self.__total_draws += 1
                 result_match = {
                     "winner": "no one",
-                    "loser": "non one",
+                    "loser": "no one",
                     "winner_rating": "no change",
                     "loser_rating": "no change",
                 }
@@ -91,7 +91,7 @@ class TournamentPlatform:
         return result_match
 
     def get_ids(self) -> list[str]:
-        return [card.get_id() for card in self.__registered_cards]
+        return [card.get_id() for card in self.__registered_cards].copy()
 
     def get_leaderboard(self) -> list:
         sorted_list: list[str] = []
@@ -109,8 +109,11 @@ class TournamentPlatform:
 
     def generate_tournament_report(self) -> dict:
         nb_participants = len(self.__registered_cards)
-        avg: int = round(sum([card.calculate_rating() for card in
-                         self.__registered_cards]) / nb_participants, 2)
+        if nb_participants > 1:
+            avg: float = round(sum([card.calculate_rating() for card in
+                               self.__registered_cards]) / nb_participants, 2)
+        else:
+            avg: int = 1200 * nb_participants
         return {'total_cards': nb_participants,
                 'matches_played': self.__total_matches, 'total_draws':
                 self.__total_draws, 'avg_rating': avg,
