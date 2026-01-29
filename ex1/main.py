@@ -13,7 +13,8 @@
 from ex0 import (
     Card,
     CreatureCard,
-    GameErrors
+    GameErrors,
+    SpellsEffects
 )
 
 from ex1 import (
@@ -27,20 +28,20 @@ from ex1 import (
 def main():
     try:
         cards_bruno: list[Card] = [
-            SpellCard("Lightning Bolt", 3, "common", "spell", "damages"),
-            SpellCard("Divine light", 3, "common", "spell", "heal"),
-            ArtifactCard("Mana Crystal", 2, "rare", "artifact", 5,
+            SpellCard("Lightning Bolt", 3, "common", SpellsEffects.DAMAGES),
+            SpellCard("Divine light", 3, "common", SpellsEffects.HEAL),
+            ArtifactCard("Mana Crystal", 2, "rare", 5,
                          "Permanent: +1 mana per turn'"),
-            CreatureCard("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
-            CreatureCard("Elf Archer", 2, "Common", "creature", 2, 8, 0)
+            CreatureCard("Fire Dragon", 5, "Legendary", 7, 15, 3),
+            CreatureCard("Elf Archer", 2, "Common", 2, 8, 0)
         ]
         cards_cannelle: list[Card] = [
-            SpellCard("Lightning Bolt", 3, "common", "spell", "damages"),
-            SpellCard("Divine light", 3, "common", "spell", "heal"),
-            ArtifactCard("Mana Crystal", 2, "rare", "artifact", 5,
+            SpellCard("Lightning Bolt", 3, "common", SpellsEffects.DAMAGES),
+            SpellCard("Divine light", 3, "common", SpellsEffects.HEAL),
+            ArtifactCard("Mana Crystal", 2, "rare", 5,
                          "Permanent: +1 mana per turn"),
-            CreatureCard("Fire Dragon", 5, "Legendary", "creature", 7, 15, 3),
-            CreatureCard("Elf Archer", 2, "Common", "creature", 2, 8, 0)
+            CreatureCard("Fire Dragon", 5, "Legendary", 7, 15, 3),
+            CreatureCard("Elf Archer", 2, "Common", 2, 8, 0)
         ]
         print("\n=== DataDeck Deck Builder ===\n")
         print("Building deck with different card types...\n")

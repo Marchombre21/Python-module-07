@@ -32,19 +32,32 @@ class GameEngine:
             factory: CardFactory,
             strategy: GameStrategy
             ) -> None:
+        """
+        Configure the engine with a factory, a strategy and a game_state.
+        Decide who will be the first player to start and create a deck
+        for both. Then both players draw 6 cards
+        """
         self.__factory = factory
         self.__strategy = strategy
         print("Factory:", self.__factory.get_name())
-        print("Strategy: ", self.__strategy.get_strategy_name())
+        print("Strategy:", self.__strategy.get_strategy_name())
         print("Available types:")
-        for card in self.__factory.get_supported_types().values():
-            print(card)
+        for key, card in self.__factory.get_supported_types().items():
+            print(key.capitalize(), card)
         for player in self.__game_state["players"]:
             factory.create_themed_deck(12, player)
             for _ in range(6):
                 player.get_deck().draw_card()
 
     def simulate_turn(self) -> dict:
+        """
+        The player draw a card and gain 2 mana points.
+        Then he plays his turn according to the strategy selected.
+        And finally the 'player_)turn' is exchange with the other.
+
+        :return: A dictionnary that summarize stats of the fight.
+        :rtype: dict
+        """
         self.__nb_turn += 1
         self.__player_turn.get_deck().draw_card()
         self.__player_turn.set_mana(2)

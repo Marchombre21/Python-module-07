@@ -12,15 +12,14 @@
 
 import random
 from ex0 import (
-    TypeCard,
     Rarity,
     GameErrors
 )
 from ex4 import (
-    TournamentPlatform,
     TournamentCard,
     DoubleError
 )
+from ex4.TournamentPlatform import TournamentPlatform
 
 
 class BoycottedTournamentError(GameErrors):
@@ -33,7 +32,6 @@ def main():
                 "name": "Fire Dragon",
                 "cost": 5,
                 "id": "dragon__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.LEGENDARY,
                 "attack": 7,
                 "health": 5,
@@ -43,7 +41,6 @@ def main():
                 "name": "Goblin Warrior",
                 "cost": 2,
                 "id": "goblin__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.COMMON,
                 "attack": 2,
                 "health": 1,
@@ -53,7 +50,6 @@ def main():
                 "name": "Ice Wizard",
                 "cost": 4,
                 "id": "wizard__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.RARE,
                 "attack": 3,
                 "health": 4,
@@ -63,7 +59,6 @@ def main():
                 "name": "Lightning Elemental",
                 "cost": 3,
                 "id": "elemental__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.UNCOMMON,
                 "attack": 4,
                 "health": 2,
@@ -73,7 +68,6 @@ def main():
                 "name": "Stone Golem",
                 "cost": 6,
                 "id": "golem__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.RARE,
                 "attack": 5,
                 "health": 8,
@@ -83,7 +77,6 @@ def main():
                 "name": "Shadow Assassin",
                 "cost": 3,
                 "id": "assassin__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.UNCOMMON,
                 "attack": 5,
                 "health": 2,
@@ -93,7 +86,6 @@ def main():
                 "name": "Healing Angel",
                 "cost": 4,
                 "id": "angel__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.RARE,
                 "attack": 2,
                 "health": 6,
@@ -103,7 +95,6 @@ def main():
                 "name": "Forest Sprite",
                 "cost": 1,
                 "id": "sprite__001",
-                "type_card": TypeCard.CREATURE,
                 "rarity": Rarity.COMMON,
                 "attack": 1,
                 "health": 1,
@@ -124,7 +115,6 @@ def main():
                     creature["cost"],
                     creature["rarity"],
                     creature["id"],
-                    creature["type_card"],
                     creature["attack"],
                     creature["defense"],
                     creature["health"]

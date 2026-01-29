@@ -10,11 +10,7 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex0 import (
-    Player,
-    CreatureCard,
-    GameErrors
-)
+from ex0 import Player, CreatureCard, GameErrors
 
 
 def main():
@@ -25,10 +21,12 @@ def main():
         gildas = Player(20, "gildas")
         game_state["players"] = [bruno, gildas]
         game_state["on_board"] = []
-        dragon = CreatureCard("Fire Dragon", 5, "Legendary", "Creature", 7, 20, 5)
-        goblin = CreatureCard("Goblin", 2, "Common", "Creature", 1, 5, 0)
+        dragon = CreatureCard("Fire Dragon", 5, "Legendary", 7, 20, 5)
+        goblin = CreatureCard("Goblin", 2, "Common", 1, 5, 0)
         dragon.set_owner(bruno)
+        bruno.add_card(dragon)
         goblin.set_owner(gildas)
+        gildas.add_card(goblin)
         print("Testing Abstract Base Class Design:\n")
         print("CreatureCard Info:")
         print(dragon.get_card_info())
@@ -39,8 +37,9 @@ def main():
         print("\nFire Dragon attacks Goblin Warrior:")
         print(dragon.attack_target(game_state))
         print("\nTesting insufficient mana (4 available):")
-        dragon2 = CreatureCard("Fire Dragon", 5, "Legendary", "Creature", 7, 20, 5)
+        dragon2 = CreatureCard("Fire Dragon", 5, "Legendary", 7, 20, 5)
         dragon2.set_owner(gildas)
+        gildas.add_card(dragon2)
         print(dragon2.play(game_state))
         print("\nAbstract pattern successfully demonstrated!")
     except (GameErrors, Exception) as e:

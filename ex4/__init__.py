@@ -1,7 +1,5 @@
-from .Rankable import Rankable
-from .TournamentCard import TournamentCard
-from .TournamentPlatform import TournamentPlatform, DoubleError
+from .TournamentPlatform import DoubleError
 
-__all__ = [Rankable, TournamentCard, TournamentPlatform, DoubleError]
+__all__ = ["DoubleError"]
 __author__ = "Bruno"
 __version__ = "1.0.0"

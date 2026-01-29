@@ -10,9 +10,9 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex0 import Card, TypeCard, Rarity, NegativeValue
+from ex0 import Card, Rarity, NegativeValue
 from ex2 import Combatable
-from ex4 import Rankable
+from ex4.Rankable import Rankable
 
 
 class TournamentCard(Card, Combatable, Rankable):
@@ -22,12 +22,11 @@ class TournamentCard(Card, Combatable, Rankable):
         cost: int,
         rarity: Rarity,
         id: str,
-        type_card: TypeCard,
         attack: int,
         defense: int,
         health: int,
     ):
-        super().__init__(name, cost, rarity, type_card)
+        super().__init__(name, cost, rarity)
         if not isinstance(attack, int) or attack < 0:
             raise ValueError("Attack must be a positive integer")
         if not isinstance(health, int) or health < 0:
@@ -42,6 +41,7 @@ class TournamentCard(Card, Combatable, Rankable):
         self.__attack: int = attack
         self.__defense: int = defense
         self.__health: int = health
+        self.__type: str = "Creature"
 
     def play(self, game_state: dict) -> dict:
         super().play(game_state)
@@ -60,6 +60,9 @@ class TournamentCard(Card, Combatable, Rankable):
                 "card_almost_played": self.get_name(),
                 "mana_almost_used": self.get_cost(),
             }
+
+    def get_type(self) -> str:
+        return self.__type
 
     def attack(self, target: "TournamentCard") -> dict:
         if not isinstance(target, type(self)):
@@ -92,6 +95,11 @@ class TournamentCard(Card, Combatable, Rankable):
         }
 
     def calculate_rating(self) -> int:
+        """
+        Everybody begin with 1200 points.
+        After that, a win is worth 16 points and a loss results in a
+        loss of 7 points
+        """
         rating = max(1200 + 16 * self.__wins - self.__losses * 7, 0)
         return rating
 
@@ -129,3 +137,6 @@ class TournamentCard(Card, Combatable, Rankable):
 
     def get_health(self) -> int:
         return self.__health
+
+    def get_tournament_stats(self) -> dict:
+        return {"id": self.__id, "wins": self.__wins, "losses": self.__losses}

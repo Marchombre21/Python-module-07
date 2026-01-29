@@ -17,10 +17,7 @@ def main():
         print("Configuring Fantasy Card Game...")
         game_engine.configure_engine(factory, strategy)
         print("\nSimulating aggressive turn...")
-        print("Hand:")
-        for card in bruno.get_hand():
-            print(card.get_name())
-        for i in range(8):
+        for i in range(4):
             print(f"\nTurn {i + 1} execution:")
             print("Actions:", game_engine.simulate_turn())
         print("\nGame report:")

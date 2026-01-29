@@ -37,17 +37,11 @@ class ArtifactsEffects(Enum):
     COST = "Permanent: +1 cost reduction to all cards"
 
 
-class TypeCard(Enum):
-    ARTIFACT = "Artifact"
-    CREATURE = "Creature"
-    SPELL = "Spell"
-
-
 class GameErrors(Exception):
     """An error class to handle all kind of errors with subclasses
     """
     def __init__(self, details: str | None = None):
-        message: str = details
+        message: str | None = details
         super().__init__(message)
 
 
@@ -71,11 +65,10 @@ class Player:
             raise EmptyValue("name")
         self.__name: str = name.capitalize()
         self.__PV: int = PV
-        self.__deck: list = []
-        self.__graveyard: list["Card"] = []
+        self.__hand: list = []
         self.__mana: int = 6
         self.__defense: int = 0
-        self.__effects: list[str] = []
+        self.__effects: list[ArtifactsEffects] = []
 
     def add_card(self, card: "Card") -> None:
         """Add played card in player's hand
@@ -83,7 +76,10 @@ class Player:
         Args:
             card (Card): An instance of the played card
         """
-        self.__deck.append(card)
+        self.__hand.append(card)
+
+    def remove_card(self, card: "Card") -> None:
+        self.__hand.remove(card)
 
     def get_mana(self) -> int:
         return self.__mana
@@ -95,10 +91,7 @@ class Player:
         return self.__name
 
     def add_deck(self, deck: list) -> None:
-        self.__deck = deck
-
-    def to_the_grave(self, card: "Card") -> None:
-        self.__graveyard.append(card)
+        self.__hand = deck
 
     def get_defense(self) -> int:
         return self.__defense
@@ -137,10 +130,7 @@ class Player:
         else:
             self.__mana += quantity
             if quantity >= 0:
-                print(f"\nMana added succesfully! New {self.__name}'s mana"
-                      f" points: {self.__mana}\n")
-            else:
-                print(f"\nMana removed succesfully! New {self.__name}'s mana"
+                print(f"\nMana added successfully! New {self.__name}'s mana"
                       f" points: {self.__mana}\n")
 
     def healing(self, health_points: int) -> None:
@@ -174,19 +164,33 @@ class Player:
 
 class Card(ABC):
     def __init__(self, name: str, cost: int, rarity: Rarity,
-                 type_card: TypeCard):
+                 ):
         self.__name: str = name.capitalize()
         self.__cost: int = cost
         self.__rarity: Rarity = rarity
-        self.__type_card: TypeCard = type_card
-        self.__graveyard: bool = False
         self.__owner: Player | None = None
 
     @abstractmethod
     def play(self, game_state: dict) -> dict:
+        """If the player have enough mana points, the card will be added to
+        the board, awarded to the owner and the cost will be substract from the
+        owner's mana points
+
+        Args:
+            game_state (dict): The dict that lists the current states of
+            the game.
+            owner (Player): The player who play this card
+
+        Returns:
+            dict: The summary of the invocation
+        """
         if not isinstance(game_state, dict):
             raise ValueError("game_state must be a dictionnnary")
         return {}
+
+    @abstractmethod
+    def get_type(self):
+        pass
 
     def get_card_info(self) -> dict:
         """Return principals informations about the card
@@ -195,8 +199,7 @@ class Card(ABC):
             dict: All informations in key/value format
         """
         return {"name": self.__name, "cost":
-                self.__cost, "rarity": self.__rarity,
-                "type_card": self.__type_card}
+                self.__cost, "rarity": self.__rarity}
 
     def is_playable(self, available_mana: int) -> bool:
         """Check if the player have enough mana points to play this card
@@ -213,15 +216,6 @@ class Card(ABC):
 
     def get_name(self) -> str:
         return self.__name
-
-    def discard_pile(self) -> None:
-        """Turn the creature to the graveyard. I have to implement a system
-        that checks if a creature is alive before she does anything
-        """
-        self.__graveyard = True
-
-    def get_type(self) -> TypeCard:
-        return self.__type_card
 
     def get_owner(self) -> Player:
         """Return the owner of this card

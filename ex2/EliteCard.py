@@ -14,8 +14,7 @@ from ex0 import (
     Card,
     NegativeValue,
     EmptyValue,
-    Rarity,
-    TypeCard
+    Rarity
 )
 from ex2 import (
     Combatable,
@@ -28,13 +27,11 @@ class EliteCard(Card, Combatable, Magical):
     (Combatable and Magical)
     """
     def __init__(self, name: str, cost: int, rarity: Rarity,
-                 type_card: TypeCard, attack: int, defense: int, mana: int,
-                 health: int):
-        super().__init__(name, cost, rarity, type_card)
+                 attack: int, defense: int, mana: int, health: int):
+        super().__init__(name, cost, rarity)
         if not isinstance(name, str) or\
-           not isinstance(rarity, str) or\
-           not isinstance(type_card, str):
-            raise ValueError("Name, rarity and type_card must be strings")
+           not isinstance(rarity, str):
+            raise ValueError("Name and rarity must be strings")
         if not isinstance(cost, int) or\
            not isinstance(attack, int) or\
            not isinstance(mana, int) or\
@@ -46,12 +43,11 @@ class EliteCard(Card, Combatable, Magical):
             raise EmptyValue("name")
         if rarity == "":
             raise EmptyValue("rarity")
-        if type_card == "":
-            raise EmptyValue("type_card")
         self.__attack: int = attack
         self.__defense: int = defense
         self.__mana: int = mana
         self.__health: int = health
+        self.__type: str = "Elite"
 
     def play(self, game_state: dict) -> dict:
         super().play(game_state)
@@ -128,3 +124,6 @@ class EliteCard(Card, Combatable, Magical):
 
     def get_health(self) -> int:
         return self.__health
+
+    def get_type(self) -> str:
+        return self.__type

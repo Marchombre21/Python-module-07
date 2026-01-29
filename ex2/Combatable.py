@@ -17,6 +17,9 @@ from ex0 import Card
 class Combatable(ABC):
     @abstractmethod
     def attack(self, target: Card) -> dict:
+        """
+        Simulate a physic attack.
+        """
         pass
 
     @abstractmethod

@@ -10,7 +10,7 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex2 import EliteCard
+from ex2.EliteCard import EliteCard
 from ex0.Card import GameErrors
 
 
@@ -22,12 +22,10 @@ def main():
         print("- Combatable: ['attack', 'defend', 'get_combat_stats']")
         print("- Magical: ['cast_spell', 'channel_mana', 'get_magic_stats']")
         print("\nPlaying Arcane Warrior (Elite Card):\n")
-        arcane_warrior1 = EliteCard("Arcane Warrior", 5, "rare", "elite",
-                                    5, 2, 8, 20)
-        arcane_warrior2 = EliteCard("Arcane Warrior", 5, "rare", "elite",
-                                    5, 2, 8, 20)
+        arcane_warrior1 = EliteCard("Arcane Warrior", 5, "rare", 5, 2, 8, 20)
+        arcane_warrior2 = EliteCard("Arcane Warrior", 5, "rare", 5, 2, 8, 20)
         print("Combat phase:")
-        print(arcane_warrior1.attack(arcane_warrior2))
+        print("Defense result:", arcane_warrior1.attack(arcane_warrior2))
         print("\nMagic phase:")
         name = arcane_warrior1.get_name()
         print("Spell cast:", arcane_warrior2.cast_spell("Fireball",

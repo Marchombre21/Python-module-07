@@ -10,7 +10,7 @@
 #                                                                             #
 # ****************************************************************************#
 
-from ex4 import TournamentCard
+from ex4.TournamentCard import TournamentCard
 from ex0 import GameErrors
 
 
@@ -43,6 +43,15 @@ class TournamentPlatform:
         return result
 
     def create_match(self, card1_id: str, card2_id: str) -> dict:
+        """
+        The first creature is the attacker and the second the defender.
+        If the defender die, the attacker win the fight.
+        Else, the defender become the attacker and vice versa.
+        If the new attacker can't defeat the new defender it's a tie game.
+
+        :return: Results of the fight
+        :rtype: dict
+        """
         if not isinstance(card1_id, str) or card1_id == "":
             raise ValueError("All id must be non-empty strings")
         if not isinstance(card2_id, str) or card2_id == "":
@@ -113,7 +122,7 @@ class TournamentPlatform:
             avg: float = round(sum([card.calculate_rating() for card in
                                self.__registered_cards]) / nb_participants, 2)
         else:
-            avg: int = 1200 * nb_participants
+            avg = 1200 * nb_participants
         return {'total_cards': nb_participants,
                 'matches_played': self.__total_matches, 'total_draws':
                 self.__total_draws, 'avg_rating': avg,
