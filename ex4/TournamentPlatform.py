@@ -111,8 +111,8 @@ class TournamentPlatform:
         ):
             card_stats = card.get_rank_info()
             sorted_list.append(
-                f"{card_stats["name"]} - Rating: {card_stats["rating"]}"
-                f" ({card_stats["wins"]}-{card_stats["losses"]})"
+                f"{card_stats['name']} - Rating: {card_stats['rating']}"
+                f" ({card_stats['wins']}-{card_stats['losses']})"
             )
         return sorted_list
 

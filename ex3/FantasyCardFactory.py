@@ -416,17 +416,12 @@ class FantasyCardFactory(CardFactory):
         :rtype: dict
         """
         result: dict = {'creatures': [], 'spells': [], 'artifacts': []}
-        # all_cards: list = self._artifacts + self._creatures + self._spells
         for card in self._artifacts:
             result["artifacts"].append(card["name"])
         for card in self._creatures:
             result["creatures"].append(card["name"])
         for card in self._spells:
             result["spells"].append(card["name"])
-            # result[i + 1] = {
-            #     "name": card["name"],
-            #     "rarity": card["rarity"].value,
-            # }
         return result
 
     def get_name(self) -> str:
